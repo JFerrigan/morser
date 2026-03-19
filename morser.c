@@ -1,6 +1,12 @@
+/* SPDX-License-Identifier: MIT */
+
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+
+#ifndef VERSION
+#define VERSION "dev"
+#endif
 
 static const char *letter_to_morse(char ch) {
     static const char *letters[] = {
@@ -56,6 +62,11 @@ static void print_help(const char *program_name) {
     printf("Options:\n");
     printf("  -d, --decode  Decode Morse code to text\n");
     printf("  -h, --help    Show this help message\n");
+    printf("  -v, --version Show version information\n");
+}
+
+static void print_version(void) {
+    printf("morser %s\n", VERSION);
 }
 
 static void encode_text(const char *input) {
@@ -123,6 +134,11 @@ int main(int argc, char *argv[]) {
 
     if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
         print_help(argv[0]);
+        return 0;
+    }
+
+    if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0) {
+        print_version();
         return 0;
     }
 

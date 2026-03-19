@@ -8,6 +8,12 @@ A small command-line Morse code encoder and decoder written in C.
 make
 ```
 
+Build a specific version string:
+
+```sh
+make VERSION=0.1.0
+```
+
 ## Install
 
 ```sh
@@ -18,6 +24,7 @@ This installs:
 
 - `morser` to `/usr/local/bin`
 - `morser.1` to `/usr/local/share/man/man1`
+- `LICENSE` to `/usr/local/share/licenses/morser`
 
 Install without `sudo` under `~/.local`:
 
@@ -30,6 +37,8 @@ Or use the helper script:
 ```sh
 sh ./install.sh
 ```
+
+By default, the helper installs the license to `~/.local/share/licenses/morser/LICENSE`.
 
 If needed, add these to your shell config:
 
@@ -58,6 +67,12 @@ Show help:
 morser --help
 ```
 
+Show version:
+
+```sh
+morser --version
+```
+
 Round-trip encode and decode in one line:
 
 ```sh
@@ -82,4 +97,21 @@ For a user-local install:
 
 ```sh
 make uninstall PREFIX="$HOME/.local"
+```
+
+## License
+
+`morser` is licensed under the MIT License. See [`LICENSE`](LICENSE).
+
+## Releases
+
+The binary version comes from the `VERSION` variable in `Makefile`.
+For a release, update it if needed, commit, then create an annotated tag:
+
+```sh
+git add -A
+git commit -m "Release v0.1.0"
+git tag -a v0.1.0 -m "Release v0.1.0"
+git push origin main
+git push origin v0.1.0
 ```
