@@ -1,0 +1,53 @@
+.TH MORSE 1 "March 2026" "morse" "User Commands"
+.SH NAME
+morse \- encode text to Morse code or decode Morse code to text
+.SH SYNOPSIS
+.B morse
+[\fIOPTION\fR] \fItext\fR
+.SH DESCRIPTION
+.B morse
+encodes plain text to Morse code by default.
+
+Use
+.B --decode
+to convert Morse code back into text.
+
+Letters and digits are supported. Spaces are encoded as
+.B /
+and unsupported input is emitted as
+.BR ? .
+.SH OPTIONS
+.TP
+.B \-d, \-\-decode
+Decode Morse code into text.
+.TP
+.B \-h, \-\-help
+Show a short usage message and exit.
+.SH EXAMPLES
+.TP
+Encode text:
+.B morse SOS
+.br
+Produces:
+.B ... --- ...
+.TP
+Decode Morse code:
+.B morse --decode "... --- ..."
+.br
+Produces:
+.B SOS
+.TP
+Decode Morse code with a word break:
+.B morse --decode "... --- ... / .---- ..--- ...--"
+.br
+Produces:
+.B SOS 123
+.SH EXIT STATUS
+.TP
+.B 0
+Success.
+.TP
+.B 1
+Invalid usage, such as missing required arguments.
+.SH SEE ALSO
+.BR man (1)
