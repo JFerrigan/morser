@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-release-assets:
+    name: Build ${{ matrix.asset_name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            asset_name: morser-linux-x86_64
+          - os: macos-13
+            asset_name: morser-macos-x86_64
+          - os: macos-latest
+            asset_name: morser-macos-arm64
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: make
+
+      - name: Package release archive
+        run: |
+          mkdir -p dist/${{ matrix.asset_name }}
+          cp morser dist/${{ matrix.asset_name }}/morser
+          cp morser.1 dist/${{ matrix.asset_name }}/morser.1
+          cp README.md LICENSE dist/${{ matrix.asset_name }}/
+          tar -C dist -czf dist/${{ matrix.asset_name }}.tar.gz ${{ matrix.asset_name }}
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset_name }}
+          path: dist/${{ matrix.asset_name }}.tar.gz
+
+  publish-release:
+    name: Publish release
+    runs-on: ubuntu-latest
+    needs: build-release-assets
+
+    steps:
+      - name: Download packaged artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Create or update GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/**/*.tar.gz
+          generate_release_notes: true
+          prerelease: true
