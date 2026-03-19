@@ -2,4 +2,6 @@
 /hello
 /morse
 /morser
+/test_morser
 /dist/
+.DS_Store

@@ -10,15 +10,23 @@ SRC := morser.c
 MANPAGE := morser.1
 VERSION ?= 0.1.0
 LICENSE_FILE := LICENSE
+TEST_TARGET := test_morser
+TEST_SRC := tests/test_morser.c
 
 CPPFLAGS += -DVERSION=\"$(VERSION)\"
 
-.PHONY: all install uninstall clean
+.PHONY: all test install uninstall clean
 
 all: $(TARGET)
 
 $(TARGET): $(SRC)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(SRC) -o $(TARGET)
+
+$(TEST_TARGET): $(TEST_SRC) $(SRC)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(TEST_SRC) -o $(TEST_TARGET)
+
+test: $(TEST_TARGET)
+	./$(TEST_TARGET)
 
 install: $(TARGET)
 	install -d $(DESTDIR)$(BINDIR)
@@ -34,4 +42,4 @@ uninstall:
 	rm -f $(DESTDIR)$(LICENSEDIR)/$(LICENSE_FILE)
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) $(TEST_TARGET)

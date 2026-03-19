@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: MIT */
 
 #include <ctype.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -69,27 +70,66 @@ static void print_version(void) {
     printf("morser %s\n", VERSION);
 }
 
-static void encode_text(const char *input) {
+static int append_text(char *output, size_t output_size, size_t *used, const char *format, ...) {
+    va_list args;
+    int written;
+
+    if (*used >= output_size) {
+        return -1;
+    }
+
+    va_start(args, format);
+    written = vsnprintf(output + *used, output_size - *used, format, args);
+    va_end(args);
+
+    if (written < 0 || (size_t) written >= output_size - *used) {
+        return -1;
+    }
+
+    *used += (size_t) written;
+    return 0;
+}
+
+int morser_encode(const char *input, char *output, size_t output_size) {
+    size_t used = 0;
+
+    if (output_size == 0) {
+        return -1;
+    }
+
     for (size_t i = 0; input[i] != '\0'; i++) {
+        const char *code;
+
         if (input[i] == ' ') {
-            printf("/ ");
+            if (append_text(output, output_size, &used, "/ ") != 0) {
+                return -1;
+            }
             continue;
         }
 
-            const char *code = letter_to_morse(input[i]);
-        if (code != NULL) {
-            printf("%s ", code);
-        } else {
-            printf("? ");
+        code = letter_to_morse(input[i]);
+        if (append_text(output, output_size, &used, "%s ", code != NULL ? code : "?") != 0) {
+            return -1;
         }
     }
 
-    printf("\n");
+    if (used > 0) {
+        output[used - 1] = '\0';
+    } else {
+        output[0] = '\0';
+    }
+
+    return 0;
 }
 
-static void decode_text(const char *input) {
+int morser_decode(const char *input, char *output, size_t output_size) {
     char token[16];
     size_t token_len = 0;
+    size_t used = 0;
+
+    if (output_size == 0) {
+        return -1;
+    }
 
     for (size_t i = 0;; i++) {
         char ch = input[i];
@@ -98,7 +138,9 @@ static void decode_text(const char *input) {
             if (token_len + 1 < sizeof(token)) {
                 token[token_len++] = ch;
             } else {
-                printf("? ");
+                if (append_text(output, output_size, &used, "?") != 0) {
+                    return -1;
+                }
                 token_len = 0;
                 while (input[i + 1] == '.' || input[i + 1] == '-') {
                     i++;
@@ -109,21 +151,27 @@ static void decode_text(const char *input) {
 
         if (token_len > 0) {
             token[token_len] = '\0';
-            putchar(morse_to_char(token));
+            if (append_text(output, output_size, &used, "%c", morse_to_char(token)) != 0) {
+                return -1;
+            }
             token_len = 0;
         }
 
         if (ch == '/') {
-            putchar(' ');
+            if (append_text(output, output_size, &used, " ") != 0) {
+                return -1;
+            }
         } else if (ch == '\0') {
             break;
         }
     }
 
-    printf("\n");
+    output[used] = '\0';
+    return 0;
 }
 
 int main(int argc, char *argv[]) {
+    char output[4096];
     const char *input;
     int decode = 0;
 
@@ -154,10 +202,17 @@ int main(int argc, char *argv[]) {
     }
 
     if (decode) {
-        decode_text(input);
+        if (morser_decode(input, output, sizeof(output)) != 0) {
+            fprintf(stderr, "Output too large to decode\n");
+            return 1;
+        }
     } else {
-        encode_text(input);
+        if (morser_encode(input, output, sizeof(output)) != 0) {
+            fprintf(stderr, "Output too large to encode\n");
+            return 1;
+        }
     }
 
+    printf("%s\n", output);
     return 0;
 }

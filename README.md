@@ -8,6 +8,12 @@ A small command-line Morse code encoder and decoder written in C.
 make
 ```
 
+Run tests:
+
+```sh
+make test
+```
+
 Build a specific version string:
 
 ```sh
