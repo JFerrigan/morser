@@ -3,9 +3,9 @@ CFLAGS ?= -Wall -Wextra -O2
 PREFIX ?= /usr/local
 BINDIR ?= $(PREFIX)/bin
 MANDIR ?= $(PREFIX)/share/man/man1
-TARGET ?= morse
-SRC := morse.c
-MANPAGE := morse.1
+TARGET ?= morser
+SRC := morser.c
+MANPAGE := morser.1
 
 .PHONY: all install uninstall clean
 
@@ -16,12 +16,12 @@ $(TARGET): $(SRC)
 
 install: $(TARGET)
 	install -d $(DESTDIR)$(BINDIR)
-	install -m 755 $(TARGET) $(DESTDIR)$(BINDIR)/morse
+	install -m 755 $(TARGET) $(DESTDIR)$(BINDIR)/morser
 	install -d $(DESTDIR)$(MANDIR)
 	install -m 644 $(MANPAGE) $(DESTDIR)$(MANDIR)/$(MANPAGE)
 
 uninstall:
-	rm -f $(DESTDIR)$(BINDIR)/morse
+	rm -f $(DESTDIR)$(BINDIR)/morser
 	rm -f $(DESTDIR)$(MANDIR)/$(MANPAGE)
 
 clean:

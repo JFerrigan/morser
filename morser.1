@@ -1,11 +1,11 @@
-.TH MORSE 1 "March 2026" "morse" "User Commands"
+.TH MORSER 1 "March 2026" "morser" "User Commands"
 .SH NAME
-morse \- encode text to Morse code or decode Morse code to text
+morser \- encode text to Morse code or decode Morse code to text
 .SH SYNOPSIS
-.B morse
+.B morser
 [\fIOPTION\fR] \fItext\fR
 .SH DESCRIPTION
-.B morse
+.B morser
 encodes plain text to Morse code by default.
 
 Use
@@ -26,19 +26,19 @@ Show a short usage message and exit.
 .SH EXAMPLES
 .TP
 Encode text:
-.B morse SOS
+.B morser SOS
 .br
 Produces:
 .B ... --- ...
 .TP
 Decode Morse code:
-.B morse --decode "... --- ..."
+.B morser --decode "... --- ..."
 .br
 Produces:
 .B SOS
 .TP
 Decode Morse code with a word break:
-.B morse --decode "... --- ... / .---- ..--- ...--"
+.B morser --decode "... --- ... / .---- ..--- ...--"
 .br
 Produces:
 .B SOS 123

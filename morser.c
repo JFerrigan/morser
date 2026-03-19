@@ -65,9 +65,9 @@ static void encode_text(const char *input) {
             continue;
         }
 
-        const char *morse = letter_to_morse(input[i]);
-        if (morse != NULL) {
-            printf("%s ", morse);
+            const char *code = letter_to_morse(input[i]);
+        if (code != NULL) {
+            printf("%s ", code);
         } else {
             printf("? ");
         }

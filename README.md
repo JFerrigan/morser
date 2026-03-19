@@ -1,4 +1,4 @@
-# morse
+# morser
 
 A small command-line Morse code encoder and decoder written in C.
 
@@ -16,8 +16,8 @@ sudo make install
 
 This installs:
 
-- `morse` to `/usr/local/bin`
-- `morse.1` to `/usr/local/share/man/man1`
+- `morser` to `/usr/local/bin`
+- `morser.1` to `/usr/local/share/man/man1`
 
 Install without `sudo` under `~/.local`:
 
@@ -28,7 +28,7 @@ make install PREFIX="$HOME/.local"
 Or use the helper script:
 
 ```sh
-./install.sh
+sh ./install.sh
 ```
 
 If needed, add these to your shell config:
@@ -43,25 +43,25 @@ export MANPATH="$HOME/.local/share/man:$MANPATH"
 Encode text:
 
 ```sh
-morse "SOS 123"
+morser "SOS 123"
 ```
 
 Decode Morse:
 
 ```sh
-morse --decode "... --- ... / .---- ..--- ...--"
+morser --decode "... --- ... / .---- ..--- ...--"
 ```
 
 Show help:
 
 ```sh
-morse --help
+morser --help
 ```
 
 Round-trip encode and decode in one line:
 
 ```sh
-morse -d "$(morse 'SOS 123')"
+morser -d "$(morser 'SOS 123')"
 ```
 
 ## Man Page
@@ -69,7 +69,7 @@ morse -d "$(morse 'SOS 123')"
 After installation:
 
 ```sh
-man morse
+man morser
 ```
 
 ## Uninstall
