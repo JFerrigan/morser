@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: make
+
+      - name: Verify version output
+        run: ./morser --version
+
+      - name: Smoke test encode
+        run: test "$(./morser SOS | sed 's/[[:space:]]*$//')" = "... --- ..."
+
+      - name: Smoke test decode
+        run: test "$(./morser --decode '... --- ...' | sed 's/[[:space:]]*$//')" = "SOS"
